@@ -1,12 +1,17 @@
+import React from 'react';
 import Card from '../../components/card';
+import {Helmet} from 'react-helmet-async';
 
 type OffersProps = {
   offersCount: number;
 }
 
-function MainPages({offersCount}: OffersProps): JSX.Element {
+function MainPages({offersCount}: OffersProps): React.JSX.Element {
   return (
     <div className="page page--gray page--main">
+      <Helmet>
+        <title>6 cities</title>
+      </Helmet>
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -115,8 +120,8 @@ function MainPages({offersCount}: OffersProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {Array.from({length: offersCount}, (_, index) => (
-                  <Card key={index} />
+                {Array.from({length: offersCount}, (_, id) => (
+                  <Card key={id} />
                 ))}
               </div>
             </section>
