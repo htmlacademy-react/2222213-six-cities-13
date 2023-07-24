@@ -8,20 +8,21 @@ import OffersPage from '../../pages/offers/offers';
 import LoginPage from '../../pages/login/login';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
+import {TOffers} from '../../types/offer-type';
 
 
 type AppOffersProps = {
-  offersCount: number;
+  offers: TOffers;
 }
 
-function App({offersCount}: AppOffersProps): React.JSX.Element {
+function App({offers}: AppOffersProps): React.JSX.Element {
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
           <Route
             path={AppRoute.Main}
-            element={<MainPages offersCount={offersCount} />}
+            element={<MainPages offers={offers}/>}
           />
           <Route
             path={AppRoute.Offer}
@@ -37,9 +38,9 @@ function App({offersCount}: AppOffersProps): React.JSX.Element {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus={AuthorizationStatus.NoAuth}
+                authorizationStatus={AuthorizationStatus.Auth}
               >
-                <FavoritePage/>
+                <FavoritePage offers={offers}/>
               </PrivateRoute>
             }
           />

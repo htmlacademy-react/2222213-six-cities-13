@@ -21,3 +21,5 @@ export type TOffer = {
   isPremium: boolean;
   rating: number;
 };
+
+export type TOffers = TOffer[];

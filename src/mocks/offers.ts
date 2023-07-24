@@ -1,6 +1,6 @@
-import { TOffer } from '../types/offer-type';
+import {TOffer} from '../types/offer-type';
 
-export const Offers: TOffer[] = [
+export const offers: TOffer[] = [
   {
     id: crypto.randomUUID(),
     title: 'The Joshua Tree House',

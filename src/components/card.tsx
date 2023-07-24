@@ -1,24 +1,39 @@
-function Card(): JSX.Element {
+import React from 'react';
+import {TOffer} from '../types/offer-type';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../const';
+
+type TOffersCardProps = {
+  offer: TOffer;
+  view: 'offerList' | 'favoriteList';
+};
+
+function Card({offer, view}: TOffersCardProps): React.JSX.Element {
+  const {
+    id, title, type, price, previewImage, isPremium
+  } = offer;
+
   return (
-    <article className="cities__card place-card">
+    <article className={`${view === 'offerList' ? 'cities__card' : 'favorites__card'} place-card`}>
+      {isPremium &&
       <div className="place-card__mark">
         <span>Premium</span>
-      </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+      </div>}
+      <div className={`${view === 'offerList' ? 'cities__image-wrapper' : 'favorites__image-wrapper'} place-card__image-wrapper`}>
+        <Link to={`${AppRoute.Offer}/${id}`}>
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
-            width={260}
-            height={200}
+            src={previewImage}
+            width={`${view === 'offerList' ? 260 : 150}`}
+            height={`${view === 'offerList' ? 200 : 110}`}
             alt="Place image"
           />
-        </a>
+        </Link>
       </div>
-      <div className="place-card__info">
+      <div className={`${view === 'offerList' ? '' : 'favorites__card-info'}"place-card__info"`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
+            <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
@@ -42,11 +57,11 @@ function Card(): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">
-            Beautiful &amp; luxurious apartment at great location
-          </a>
+          <Link to={`${AppRoute.Offer}/${id}`}>
+            {title}
+          </Link>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );

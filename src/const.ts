@@ -1,7 +1,3 @@
-export const OffersCard = {
-  OffersCount: 5
-};
-
 export enum AppRoute {
   Main = '/',
   Login = '/login',
