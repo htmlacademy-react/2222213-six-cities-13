@@ -1,4 +1,4 @@
-import {TOffers} from '../types/offer-type';
+import {TOffers, TCity} from '../types/offer-type';
 
 export const offers: TOffers = [
   {
@@ -95,3 +95,11 @@ export const offers: TOffers = [
   }
 ];
 
+export const city: TCity = {
+  name: 'Amsterdam',
+  location: {
+    latitude: 52.37454,
+    longitude: 4.897976,
+    zoom: 13
+  }
+};
