@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import OfferList from '../../components/offer-list/offer-list';
 import {Helmet} from 'react-helmet-async';
-import { TOffers, TCity } from '../../types/offer-type';
+import { TOffers, TCity, TOffer } from '../../types/offer-type';
 import Map from '../../components/map/map';
 
 type MainOffersProps = {
@@ -11,6 +11,17 @@ type MainOffersProps = {
 
 function MainPages(props: MainOffersProps): React.JSX.Element {
   const { offers, city } = props;
+
+  const [selectedOffers, setSelectedOffers] = useState<Pick<TOffer, 'id'> | undefined>(
+    undefined
+  );
+
+  function handleListItemHover(id: string) {
+    if (selectedOffers?.id !== id) {
+      setSelectedOffers({ id });
+    }
+  }
+
   return (
     <div className="page page--gray page--main">
       <Helmet>
@@ -123,10 +134,10 @@ function MainPages(props: MainOffersProps): React.JSX.Element {
                   </li>
                 </ul>
               </form>
-              <OfferList offers={offers}/>
+              <OfferList offers={offers} onListItemHover={handleListItemHover} />
             </section>
             <div className="cities__right-section">
-              <Map offers={offers} city={city}/>
+              <Map offers={offers} city={city} selectedOffers={selectedOffers}/>
             </div>
           </div>
         </div>

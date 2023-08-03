@@ -1,24 +1,18 @@
-import {useState} from 'react';
+import React from 'react';
 import { TOffers } from '../../types/offer-type';
 import Card from '../card';
 
 
 type TOfferListProps = {
   offers: TOffers;
+  onListItemHover: (id: string) => void;
 }
 
-function OfferList({offers}: TOfferListProps): React.JSX.Element {
-  const [activated, setActivated] = useState<{id: string | null}>({ id: null });
-
-  function handleAddActive(id: string) {
-    if (activated.id !== id) {
-      setActivated({ id });
-    }
-  }
+function OfferList({offers, onListItemHover}: TOfferListProps): React.JSX.Element {
 
   return(
     <div className="cities__places-list places__list tabs__content">
-      {offers.map((item) => <Card key={item.id} offer={item} view={'offerList'} onAddActive={() => handleAddActive(item.id)}/>)}
+      {offers.map((offer) => <Card key={offer.id} offer={offer} view={'offerList'} onListItemHover={onListItemHover}/>)}
     </div>
   );
 }

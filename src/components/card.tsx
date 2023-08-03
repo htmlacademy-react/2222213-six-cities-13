@@ -6,17 +6,17 @@ import {AppRoute} from '../const';
 type TOffersCardProps = {
   offer: TOffer;
   view: 'offerList' | 'favoriteList';
-  onAddActive?: () => void;
+  onListItemHover?: (id: string) => void;
 };
 
-function Card({offer, view, onAddActive}: TOffersCardProps): React.JSX.Element {
+function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Element {
   const {
     id, title, type, price, previewImage, isPremium
   } = offer;
 
   return (
     <article className={`${view === 'offerList' ? 'cities__card' : 'favorites__card'} place-card`}
-      onMouseOver={onAddActive}
+      onMouseOver={() => onListItemHover ? onListItemHover(id) : null}
     >
       {isPremium &&
       <div className="place-card__mark">
