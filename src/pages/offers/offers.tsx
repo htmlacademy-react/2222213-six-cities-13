@@ -4,13 +4,16 @@ import {Link} from 'react-router-dom';
 import ReviewsForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review/review-list';
 import { TReviews } from '../../types/review-type';
+import Map from '../../components/map/map';
+import { TOffers } from '../../types/offer-type';
 
 type TOfferPageProps = {
+  offers: TOffers;
   reviews: TReviews;
 }
 
 function OffersPage(props: TOfferPageProps): React.JSX.Element {
-  const {reviews} = props;
+  const {reviews, offers} = props;
 
   return (
     <div className="page">
@@ -191,7 +194,7 @@ function OffersPage(props: TOfferPageProps): React.JSX.Element {
               </section>
             </div>
           </div>
-          <section className="offer__map map" />
+          <Map offers={offers} city={offers[0].city} selectedOffers={offers[0]} page={'offers'}/>
         </section>
         <div className="container">
           <section className="near-places places">

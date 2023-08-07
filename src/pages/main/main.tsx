@@ -137,7 +137,7 @@ function MainPages(props: MainOffersProps): React.JSX.Element {
               <OfferList offers={offers} onListItemHover={handleListItemHover} />
             </section>
             <div className="cities__right-section">
-              <Map offers={offers} city={city} selectedOffers={selectedOffers}/>
+              <Map offers={offers} city={city} selectedOffers={selectedOffers} page={'main'}/>
             </div>
           </div>
         </div>

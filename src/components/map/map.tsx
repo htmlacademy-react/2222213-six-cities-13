@@ -4,12 +4,14 @@ import useMap from '../hooks/use-map';
 import 'leaflet/dist/leaflet.css';
 import leaflet, {layerGroup, Marker} from 'leaflet';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
+import cn from 'classnames';
 
 
 type TMapProps = {
   offers: TOffers;
   city: TCity;
   selectedOffers: Pick<TOffer, 'id'> | undefined;
+  page: 'main' | 'offers';
 }
 
 const defaultCustomIcon = leaflet.icon({
@@ -25,7 +27,7 @@ const currentCustomIcon = leaflet.icon({
 });
 
 function Map(props: TMapProps): React.JSX.Element {
-  const {offers, city, selectedOffers} = props;
+  const {offers, city, selectedOffers, page} = props;
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
@@ -54,8 +56,14 @@ function Map(props: TMapProps): React.JSX.Element {
   }, [map, offers, selectedOffers]);
 
   return (
-    <section className="cities__map map"
-      ref={mapRef}
+    <section className={
+      cn(
+        'map',
+        {'cities__map': page === 'main'},
+        {'offer__map': page === 'offers'}
+      )
+    }
+    ref={mapRef}
     >
     </section>
   );

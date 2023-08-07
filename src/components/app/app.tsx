@@ -29,7 +29,7 @@ function App({offers, city, reviews}: AppOffersProps): React.JSX.Element {
           />
           <Route
             path={AppRoute.Offer}
-            element={<OffersPage reviews={reviews}/>}
+            element={<OffersPage reviews={reviews} offers={offers}/>}
           >
             <Route path={`${AppRoute.Offer}/:id`}/>
           </Route>
