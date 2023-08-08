@@ -2,10 +2,11 @@ import React from 'react';
 import {TOffer} from '../types/offer-type';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../const';
+import cn from 'classnames';
 
 type TOffersCardProps = {
   offer: TOffer;
-  view: 'offerList' | 'favoriteList';
+  view: 'offerList' | 'favoriteList' | 'near';
   onListItemHover?: (id: string) => void;
 };
 
@@ -15,25 +16,38 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
   } = offer;
 
   return (
-    <article className={`${view === 'offerList' ? 'cities__card' : 'favorites__card'} place-card`}
-      onMouseOver={() => onListItemHover ? onListItemHover(id) : null}
+    <article className={cn(
+      'place-card',
+      {'cities__card': view === 'offerList'},
+      {'favorites__card': view === 'favoriteList'},
+      {'near-places__card': view === 'near'})}
+    onMouseOver={() => onListItemHover ? onListItemHover(id) : null}
     >
       {isPremium &&
       <div className="place-card__mark">
         <span>Premium</span>
       </div>}
-      <div className={`${view === 'offerList' ? 'cities__image-wrapper' : 'favorites__image-wrapper'} place-card__image-wrapper`}>
+      <div className={cn(
+        'place-card__image-wrapper',
+        {'cities__image-wrapper': view === 'offerList'},
+        {'favorites__image-wrapper': view === 'favoriteList'},
+        {'near-places__image-wrapper': view === 'near'})}
+      >
         <Link to={`${AppRoute.Offer}/${id}`}>
           <img
             className="place-card__image"
             src={previewImage}
-            width={`${view === 'offerList' ? 260 : 150}`}
-            height={`${view === 'offerList' ? 200 : 110}`}
+            width={`${view === 'favoriteList' ? 150 : 260}`}
+            height={`${view === 'favoriteList' ? 110 : 200}`}
             alt="Place image"
           />
         </Link>
       </div>
-      <div className={`${view === 'offerList' ? '' : 'favorites__card-info'}"place-card__info"`}>
+      <div className={cn(
+        'place-card__info',
+        { 'favorites__card-info': view === 'favoriteList' }
+      )}
+      >
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">€{price}</b>
