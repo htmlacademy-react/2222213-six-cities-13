@@ -8,8 +8,8 @@ import cn from 'classnames';
 
 
 type TMapProps = {
-  offers: TOffers;
-  city: TCity;
+  allOffersCity: TOffers;
+  currentCity: TCity;
   selectedOffers: Pick<TOffer, 'id'> | undefined;
   page: 'main' | 'offers';
 }
@@ -27,16 +27,16 @@ const currentCustomIcon = leaflet.icon({
 });
 
 function Map(props: TMapProps): React.JSX.Element {
-  const {offers, city, selectedOffers, page} = props;
+  const {allOffersCity, currentCity, selectedOffers, page} = props;
 
   const mapRef = useRef(null);
-  const map = useMap(mapRef, city);
+  const map = useMap(mapRef, currentCity);
 
 
   useEffect(() => {
     if(map) {
       const markerLayer = layerGroup().addTo(map);
-      offers.forEach(({...offer}) => {
+      allOffersCity.forEach(({...offer}) => {
         const marker = new Marker({
           lat: offer.location.latitude,
           lng: offer.location.longitude,
@@ -53,7 +53,7 @@ function Map(props: TMapProps): React.JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffers]);
+  }, [map, allOffersCity, selectedOffers]);
 
   return (
     <section className={

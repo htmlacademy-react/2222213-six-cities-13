@@ -1,20 +1,33 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Helmet} from 'react-helmet-async';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import ReviewsForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review/review-list';
 import { TReviews } from '../../types/review-type';
 import Map from '../../components/map/map';
-import { TOffers } from '../../types/offer-type';
 import OfferList from '../../components/offer-list/offer-list';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { getNearOffers, getOffers } from '../../store/action';
+
 
 type TOfferPageProps = {
-  offers: TOffers;
   reviews: TReviews;
 }
 
 function OffersPage(props: TOfferPageProps): React.JSX.Element {
-  const {reviews, offers} = props;
+  const {reviews} = props;
+  const dispatch = useAppDispatch();
+  const { id } = useParams();
+
+  const allOffersCity = useAppSelector((state) => state.offers);
+  const currentOffer = allOffersCity.find((offer) => offer.id === id);
+  const currentCity = useAppSelector((state) => state.currentCity);
+  const nearOffers = useAppSelector((state) => state.nearOffers);
+
+  useEffect(() => {
+    dispatch(getOffers());
+    dispatch(getNearOffers());
+  },[dispatch]);
 
   return (
     <div className="page">
@@ -195,14 +208,14 @@ function OffersPage(props: TOfferPageProps): React.JSX.Element {
               </section>
             </div>
           </div>
-          <Map offers={offers} city={offers[0].city} selectedOffers={offers[0]} page={'offers'}/>
+          <Map allOffersCity={allOffersCity} selectedOffers={currentOffer} page={'offers'} currentCity={currentCity}/>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <OfferList offers={offers} page={'offers'}/>
+            <OfferList allOffersCity={nearOffers} page={'offers'}/>
           </section>
         </div>
       </main>

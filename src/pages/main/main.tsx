@@ -1,16 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import OfferList from '../../components/offer-list/offer-list';
 import {Helmet} from 'react-helmet-async';
-import { TOffers, TCity, TOffer } from '../../types/offer-type';
+import {TOffer} from '../../types/offer-type';
 import Map from '../../components/map/map';
+import CityList from '../../components/citi-list/citi-list';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { getOffers } from '../../store/action';
 
-type MainOffersProps = {
-  offers: TOffers;
-  city: TCity;
-}
+// type MainOffersProps = {
 
-function MainPages(props: MainOffersProps): React.JSX.Element {
-  const { offers, city } = props;
+// }
+
+function MainPages(): React.JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const allOffers = useAppSelector((state) => state.offers);
+  const currentCity = useAppSelector((state) => state.currentCity);
+  const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity.name);
+
 
   const [selectedOffers, setSelectedOffers] = useState<Pick<TOffer, 'id'> | undefined>(
     undefined
@@ -21,6 +28,10 @@ function MainPages(props: MainOffersProps): React.JSX.Element {
       setSelectedOffers({ id });
     }
   }
+
+  useEffect(() => {
+    dispatch(getOffers());
+  },[dispatch]);
 
   return (
     <div className="page page--gray page--main">
@@ -68,46 +79,13 @@ function MainPages(props: MainOffersProps): React.JSX.Element {
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
+          <CityList currentCity={currentCity}/>
         </div>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
+              <b className="places__found">{allOffersCity.length} places to stay in {currentCity.name}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -134,10 +112,10 @@ function MainPages(props: MainOffersProps): React.JSX.Element {
                   </li>
                 </ul>
               </form>
-              <OfferList offers={offers} onListItemHover={handleListItemHover} page={'main'} />
+              <OfferList allOffersCity={allOffersCity} onListItemHover={handleListItemHover} page={'main'} />
             </section>
             <div className="cities__right-section">
-              <Map offers={offers} city={city} selectedOffers={selectedOffers} page={'main'}/>
+              <Map allOffersCity={allOffersCity} currentCity={currentCity} selectedOffers={selectedOffers} page={'main'}/>
             </div>
           </div>
         </div>
