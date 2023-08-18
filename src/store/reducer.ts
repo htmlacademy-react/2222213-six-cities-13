@@ -1,19 +1,27 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {setCurrentCity, getNearOffers} from './action';
+import {setCurrentCity, getNearOffers, getOffers, requireAuthorization} from './action';
 import {TCity, TOffer} from '../types/offer-type';
-import { offers, offersNear } from '../mocks/offers';
-import { CITIES } from '../const';
+// import { offers, nearOffers } from '../mocks/offers';
+import { AuthorizationStatus, CITIES } from '../const';
+import { nearOffers } from '../mocks/offers';
 
-type TReducer = {
+// type TReducer = {
+//   currentCity: TCity;
+//   offers: TOffer[];
+//   nearOffers: TOffer[];
+//   authorizationStatus: string;
+// }
+
+const initialState: {
   currentCity: TCity;
   offers: TOffer[];
   nearOffers: TOffer[];
-}
-
-const initialState: TReducer = {
+  authorizationStatus: string;
+} = {
   currentCity: CITIES[0],
-  offers: offers,
-  nearOffers: offersNear
+  offers: [],
+  nearOffers: nearOffers,
+  authorizationStatus: AuthorizationStatus.Unknown,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -21,8 +29,17 @@ const reducer = createReducer(initialState, (builder) => {
     .addCase(setCurrentCity, (state, action) => {
       state.currentCity = action.payload;
     })
+    .addCase(getOffers, (state, action) => {
+      state.offers = action.payload;
+    })
+    // .addCase(getOffers, (state) => {
+    //   state.offers = offers;
+    // })
     .addCase(getNearOffers, (state) => {
-      state.nearOffers = offersNear;
+      state.nearOffers = nearOffers;
+    })
+    .addCase(requireAuthorization, (state, action) => {
+      state.authorizationStatus = action.payload;
     });
 });
 

@@ -1,19 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import OfferList from '../../components/offer-list/offer-list';
 import {Helmet} from 'react-helmet-async';
 import {TOffer} from '../../types/offer-type';
 import Map from '../../components/map/map';
 import CityList from '../../components/citi-list/citi-list';
-import { useAppDispatch, useAppSelector } from '../../components/hooks';
-import { getOffers } from '../../store/action';
+import { useAppSelector } from '../../components/hooks';
+// import { getOffers } from '../../store/action';
 
 // type MainOffersProps = {
 
 // }
 
 function MainPages(): React.JSX.Element {
-  const dispatch = useAppDispatch();
-
   const allOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity.name);
@@ -29,9 +27,6 @@ function MainPages(): React.JSX.Element {
     }
   }
 
-  useEffect(() => {
-    dispatch(getOffers());
-  },[dispatch]);
 
   return (
     <div className="page page--gray page--main">

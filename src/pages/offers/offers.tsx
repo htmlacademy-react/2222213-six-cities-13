@@ -7,7 +7,7 @@ import { TReviews } from '../../types/review-type';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
-import { getNearOffers, getOffers } from '../../store/action';
+import { getNearOffers} from '../../store/action';
 
 
 type TOfferPageProps = {
@@ -25,7 +25,6 @@ function OffersPage(props: TOfferPageProps): React.JSX.Element {
   const nearOffers = useAppSelector((state) => state.nearOffers);
 
   useEffect(() => {
-    dispatch(getOffers());
     dispatch(getNearOffers());
   },[dispatch]);
 

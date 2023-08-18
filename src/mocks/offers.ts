@@ -104,7 +104,7 @@ export const city: TCity = {
   }
 };
 
-export const offersNear: TOffers = [
+export const nearOffers: TOffers = [
   {
     id: crypto.randomUUID(),
     title: 'Amazing and Extremely Central Flat',

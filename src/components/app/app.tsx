@@ -8,28 +8,27 @@ import OffersPage from '../../pages/offers/offers';
 import LoginPage from '../../pages/login/login';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-import {TOffers, TCity} from '../../types/offer-type';
+import {TOffers} from '../../types/offer-type';
 import { TReviews } from '../../types/review-type';
 
 
 type AppOffersProps = {
   offers: TOffers;
-  city: TCity;
   reviews: TReviews;
 }
 
-function App({offers, city, reviews}: AppOffersProps): React.JSX.Element {
+function App({offers, reviews}: AppOffersProps): React.JSX.Element {
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
           <Route
             path={AppRoute.Main}
-            element={<MainPages offers={offers} city={city}/>}
+            element={<MainPages />}
           />
           <Route
             path={AppRoute.Offer}
-            element={<OffersPage reviews={reviews} offers={offers}/>}
+            element={<OffersPage reviews={reviews} />}
           >
             <Route path={`${AppRoute.Offer}/:id`}/>
           </Route>
