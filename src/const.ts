@@ -1,4 +1,5 @@
-import { TCity } from './types/offer-type';
+import { TCity, TOffer } from './types/offer-type';
+import { TSorting } from './types/sorting';
 
 export enum AppRoute {
   Main = '/',
@@ -33,12 +34,31 @@ export enum City {
   Dusseldorf = 'Dusseldorf'
 }
 
-export enum SortDescription {
-  Popular = 'Popular',
-  PriceLowToHigh = 'Price: low to high',
-  PriceHighToLow = 'Price: high to low',
-  TopRatedFirst = 'Top rated first'
+export const SortDescription = {
+  Popular: 'Popular',
+  PriceLowToHigh: 'Price: low to high',
+  PriceHighToLow: 'Price: high to low',
+  TopRatedFirst: 'Top rated first',
+} as const;
+
+function sortByRating(a: TOffer, b: TOffer) {
+  return b.rating - a.rating;
 }
+
+function sortLowToHigh(a: TOffer, b: TOffer) {
+  return a.price - b.price;
+}
+
+function sortHighToLow(a: TOffer, b: TOffer) {
+  return b.price - a.price;
+}
+
+export const sorting: Record<TSorting, (offers: TOffer[]) => TOffer[]> = {
+  Popular: (offers: TOffer[]) => [...offers],
+  PriceHighToLow: (offers: TOffer[]) => [...offers].sort(sortHighToLow),
+  PriceLowToHigh: (offers: TOffer[]) => [...offers].sort(sortLowToHigh),
+  TopRatedFirst: (offers: TOffer[]) => [...offers].sort(sortByRating)
+};
 
 export const CITIES: TCity[] = [
   {
