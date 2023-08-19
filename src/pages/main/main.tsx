@@ -8,12 +8,14 @@ import { useAppSelector } from '../../components/hooks';
 import Sorting from '../../components/sorting-options/sorting-options';
 import { SortDescription, sorting } from '../../const';
 import { TSorting } from '../../types/sorting';
+import Spinner from '../../components/spinner/spinner';
 
 
 function MainPages(): React.JSX.Element {
   const allOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity.name);
+  const isNotOffers = allOffersCity.length < 1;
 
   const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
 
@@ -32,6 +34,10 @@ function MainPages(): React.JSX.Element {
   }
 
   const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
+
+  if(isNotOffers) {
+    return <Spinner/>;
+  }
 
   return (
     <div className="page page--gray page--main">
