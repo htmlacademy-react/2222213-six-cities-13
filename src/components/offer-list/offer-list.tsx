@@ -1,6 +1,6 @@
 import React from 'react';
 import { TOffers } from '../../types/offer-type';
-import Card from '../card';
+import Card from '../card/card';
 import cn from 'classnames';
 
 

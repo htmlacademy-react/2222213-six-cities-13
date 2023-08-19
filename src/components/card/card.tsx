@@ -1,7 +1,7 @@
 import React from 'react';
-import {TOffer} from '../types/offer-type';
+import {TOffer} from '../../types/offer-type';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../const';
+import {AppRoute} from '../../const';
 import cn from 'classnames';
 
 type TOffersCardProps = {
@@ -12,7 +12,7 @@ type TOffersCardProps = {
 
 function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Element {
   const {
-    id, title, type, price, previewImage, isPremium
+    id, title, type, price, previewImage, isPremium, rating
   } = offer;
 
   return (
@@ -69,7 +69,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: `${rating * 20}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

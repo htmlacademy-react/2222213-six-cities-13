@@ -5,21 +5,25 @@ import {TOffer} from '../../types/offer-type';
 import Map from '../../components/map/map';
 import CityList from '../../components/citi-list/citi-list';
 import { useAppSelector } from '../../components/hooks';
-// import { getOffers } from '../../store/action';
+import Sorting from '../../components/sorting-options/sorting-options';
+import { SortDescription, sorting } from '../../const';
+import { TSorting } from '../../types/sorting';
 
-// type MainOffersProps = {
-
-// }
 
 function MainPages(): React.JSX.Element {
   const allOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity.name);
 
+  const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
 
   const [selectedOffers, setSelectedOffers] = useState<Pick<TOffer, 'id'> | undefined>(
     undefined
   );
+
+  function handleSorting(sort: TSorting) {
+    setActiveSorting(sort);
+  }
 
   function handleListItemHover(id: string) {
     if (selectedOffers?.id !== id) {
@@ -27,6 +31,7 @@ function MainPages(): React.JSX.Element {
     }
   }
 
+  const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
 
   return (
     <div className="page page--gray page--main">
@@ -81,33 +86,8 @@ function MainPages(): React.JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{allOffersCity.length} places to stay in {currentCity.name}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width={7} height={4}>
-                    <use xlinkHref="#icon-arrow-select" />
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li
-                    className="places__option places__option--active"
-                    tabIndex={0}
-                  >
-                    Popular
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: low to high
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: high to low
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Top rated first
-                  </li>
-                </ul>
-              </form>
-              <OfferList allOffersCity={allOffersCity} onListItemHover={handleListItemHover} page={'main'} />
+              <Sorting activeSorting={activeSorting} handleSorting={handleSorting}/>
+              <OfferList allOffersCity={sortOffers} onListItemHover={handleListItemHover} page={'main'} />
             </section>
             <div className="cities__right-section">
               <Map allOffersCity={allOffersCity} currentCity={currentCity} selectedOffers={selectedOffers} page={'main'}/>

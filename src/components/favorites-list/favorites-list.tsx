@@ -1,4 +1,4 @@
-import Card from '../card';
+import Card from '../card/card';
 import {TOffers} from '../../types/offer-type';
 
 type TFavoriteListProps = {
@@ -17,7 +17,7 @@ function FavoriteList({offers}: TFavoriteListProps) {
           </div>
         </div>
         <div className="favorites__places">
-          {offers.map((item) => <Card key={item.id} offer={item} view={'favoriteList'}/>)}
+          {offers.map((offer) => <Card key={offer.id} offer={offer} view={'favoriteList'}/>)}
         </div>
       </li>
     </ul>

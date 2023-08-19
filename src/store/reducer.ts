@@ -1,16 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {setCurrentCity, getNearOffers, getOffers, requireAuthorization} from './action';
 import {TCity, TOffer} from '../types/offer-type';
-// import { offers, nearOffers } from '../mocks/offers';
 import { AuthorizationStatus, CITIES } from '../const';
 import { nearOffers } from '../mocks/offers';
 
-// type TReducer = {
-//   currentCity: TCity;
-//   offers: TOffer[];
-//   nearOffers: TOffer[];
-//   authorizationStatus: string;
-// }
 
 const initialState: {
   currentCity: TCity;
@@ -32,9 +25,6 @@ const reducer = createReducer(initialState, (builder) => {
     .addCase(getOffers, (state, action) => {
       state.offers = action.payload;
     })
-    // .addCase(getOffers, (state) => {
-    //   state.offers = offers;
-    // })
     .addCase(getNearOffers, (state) => {
       state.nearOffers = nearOffers;
     })
