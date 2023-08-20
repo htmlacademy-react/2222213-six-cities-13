@@ -14,4 +14,9 @@ export type TReview = {
   rating: number;
 }
 
+export type AuthData = {
+  login: string;
+  password: string;
+};
+
 export type TReviews = TReview[];
