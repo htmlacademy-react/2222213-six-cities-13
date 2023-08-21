@@ -15,7 +15,7 @@ import Header from '../../components/headers/headers';
 function MainPages(): React.JSX.Element {
   const allOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
-  const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity.name);
+  const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity);
   const isNotOffers = allOffersCity.length < 1;
 
   const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
@@ -55,12 +55,12 @@ function MainPages(): React.JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{allOffersCity.length} places to stay in {currentCity.name}</b>
+              <b className="places__found">{allOffersCity.length} places to stay in {currentCity}</b>
               <Sorting activeSorting={activeSorting} handleSorting={handleSorting}/>
-              <OfferList allOffersCity={sortOffers} onListItemHover={handleListItemHover} page={'main'} />
+              <OfferList offers={sortOffers} onListItemHover={handleListItemHover} page={'main'} />
             </section>
             <div className="cities__right-section">
-              <Map allOffersCity={allOffersCity} currentCity={currentCity} selectedOffers={selectedOffers} page={'main'}/>
+              <Map offers={allOffersCity} currentCity={currentCity} selectedOffers={selectedOffers} page={'main'}/>
             </div>
           </div>
         </div>
