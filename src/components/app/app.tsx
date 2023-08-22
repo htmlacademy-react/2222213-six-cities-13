@@ -8,17 +8,10 @@ import OffersPage from '../../pages/offers/offers';
 import LoginPage from '../../pages/login/login';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-import {TOffers} from '../../types/offer-type';
-import { TReviews } from '../../types/review-type';
 import { useAppSelector } from '../hooks';
 
 
-type AppOffersProps = {
-  offers: TOffers;
-  reviews: TReviews;
-}
-
-function App({offers, reviews}: AppOffersProps): React.JSX.Element {
+function App(): React.JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
   return (
@@ -31,7 +24,7 @@ function App({offers, reviews}: AppOffersProps): React.JSX.Element {
           />
           <Route
             path={AppRoute.Offer}
-            element={<OffersPage reviews={reviews} />}
+            element={<OffersPage authorizationStatus={authorizationStatus}/>}
           >
             <Route path={`${AppRoute.Offer}/:id`}/>
           </Route>
@@ -45,7 +38,7 @@ function App({offers, reviews}: AppOffersProps): React.JSX.Element {
               <PrivateRoute
                 authorizationStatus={authorizationStatus}
               >
-                <FavoritePage offers={offers}/>
+                <FavoritePage/>
               </PrivateRoute>
             }
           />

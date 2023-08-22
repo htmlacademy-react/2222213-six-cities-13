@@ -5,12 +5,12 @@ import cn from 'classnames';
 
 
 type TOfferListProps = {
-  allOffersCity: TOffers;
+  offers: TOffers;
   onListItemHover?: (id: string) => void;
   page: 'offers' | 'main';
 }
 
-function OfferList({allOffersCity, onListItemHover, page}: TOfferListProps): React.JSX.Element {
+function OfferList({offers, onListItemHover, page}: TOfferListProps): React.JSX.Element {
 
   return(
     <div className={cn(
@@ -19,7 +19,7 @@ function OfferList({allOffersCity, onListItemHover, page}: TOfferListProps): Rea
       {'near-places__list': page === 'offers'}
     )}
     >
-      {allOffersCity.map((offer) => <Card key={offer.id} offer={offer} view={page === 'main' ? 'offerList' : 'near'} onListItemHover={onListItemHover}/>)}
+      {offers.map((offer) => <Card key={offer.id} offer={offer} view={page === 'main' ? 'offerList' : 'near'} onListItemHover={onListItemHover}/>)}
     </div>
   );
 }

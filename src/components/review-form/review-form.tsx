@@ -1,4 +1,7 @@
 import React, {useState, ChangeEvent, Fragment} from 'react';
+import { TOffer } from '../../types/offer-type';
+import { useAppDispatch } from '../hooks';
+import { addReviews, fetchReviews } from '../../store/api-actions/review-api';
 
 const ratingAndTitle = {
   '1': 'terribly',
@@ -8,28 +11,55 @@ const ratingAndTitle = {
   '5': 'perfect'
 };
 
-function ReviewsForm(): React.JSX.Element {
-  const [formData, setFormData] = useState({
-    rating: '0',
-    text: ''
-  });
+type TReviewFormProps = {
+  id: TOffer['id'] | undefined;
+}
+
+const initialState = {
+  comment: '',
+  rating: 0,
+  isDisabled: false
+};
+
+function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const [formData, setFormData] = useState(initialState);
 
   function handleTextChange(evt: ChangeEvent<HTMLTextAreaElement>) {
     setFormData({
       ...formData,
-      text: evt.target.value
+      comment: evt.target.value
     });
   }
 
   function handleRatingChange(evt: ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
-      rating: evt.target.value
+      rating: Number(evt.target.value)
     });
   }
 
+  function handelSubmit() {
+    if(id) {
+      const { comment, rating } = formData;
+      setFormData({ ...formData, isDisabled: true });
+      dispatch(addReviews({
+        id,
+        reviewData: { comment, rating }
+      })).then(() => {
+        setFormData(initialState);
+        dispatch(fetchReviews(id));
+      });
+    }
+  }
+
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form" onSubmit={(evt) => {
+      evt.preventDefault();
+      handelSubmit();
+    }}
+    >
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -45,6 +75,7 @@ function ReviewsForm(): React.JSX.Element {
                 id={`${rating}-stars`}
                 type="radio"
                 onChange={handleRatingChange}
+                disabled={formData.isDisabled}
               />
               <label
                 htmlFor={`${rating}-stars`}
@@ -63,8 +94,12 @@ function ReviewsForm(): React.JSX.Element {
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        defaultValue={''}
+        value={formData.comment}
+        maxLength={300}
+        minLength={50}
+        required
         onChange={handleTextChange}
+        disabled={formData.isDisabled}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -76,6 +111,7 @@ function ReviewsForm(): React.JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
+          disabled={formData.isDisabled}
         >
           Submit
         </button>

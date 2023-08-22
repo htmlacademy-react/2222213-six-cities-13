@@ -1,22 +1,27 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {setCurrentCity, getNearOffers, getOffers, requireAuthorization, setError} from './action';
-import {TCity, TOffer} from '../types/offer-type';
-import { AuthorizationStatus, CITIES } from '../const';
-import { nearOffers } from '../mocks/offers';
-
+import {setCurrentCity, getNearOffers, getOffers, requireAuthorization, setError, getOffer, getReview, isNotOffer, getFavorites} from './action';
+import {TOffer} from '../types/offer-type';
+import { AuthorizationStatus, City } from '../const';
+import { TReview } from '../types/review-type';
 
 const initialState: {
-  currentCity: TCity;
+  currentCity: City;
   offers: TOffer[];
   nearOffers: TOffer[];
   authorizationStatus: AuthorizationStatus;
   error: string | null;
+  offer: TOffer | null;
+  reviews: TReview[];
+  favorites: TOffer[];
 } = {
-  currentCity: CITIES[0],
+  currentCity: City.Paris,
   offers: [],
-  nearOffers: nearOffers,
+  nearOffers: [],
   authorizationStatus: AuthorizationStatus.Unknown,
   error: null,
+  offer: null,
+  reviews: [],
+  favorites: [],
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -27,14 +32,26 @@ const reducer = createReducer(initialState, (builder) => {
     .addCase(getOffers, (state, action) => {
       state.offers = action.payload;
     })
-    .addCase(getNearOffers, (state) => {
-      state.nearOffers = nearOffers;
+    .addCase(getOffer, (state, action) => {
+      state.offer = action.payload;
+    })
+    .addCase(getReview, (state, action) => {
+      state.reviews = action.payload;
     })
     .addCase(requireAuthorization, (state, action) => {
       state.authorizationStatus = action.payload;
     })
+    .addCase(getNearOffers, (state, action) => {
+      state.nearOffers = action.payload;
+    })
     .addCase(setError, (state, action) => {
       state.error = action.payload;
+    })
+    .addCase(isNotOffer, (state) => {
+      state.offer = null;
+    })
+    .addCase(getFavorites, (state, action) => {
+      state.favorites = action.payload;
     });
 });
 

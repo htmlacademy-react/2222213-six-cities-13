@@ -1,15 +1,15 @@
 import React, { useRef, useEffect} from 'react';
-import { TCity, TOffer, TOffers } from '../../types/offer-type';
+import { TCity, TOffer} from '../../types/offer-type';
 import useMap from '../hooks/use-map';
 import 'leaflet/dist/leaflet.css';
 import leaflet, {layerGroup, Marker} from 'leaflet';
-import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
+import { City, URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 import cn from 'classnames';
 
 
 type TMapProps = {
-  allOffersCity: TOffers;
-  currentCity: TCity;
+  offers: TOffer[];
+  currentCity: City;
   selectedOffers: Pick<TOffer, 'id'> | undefined;
   page: 'main' | 'offers';
 }
@@ -26,20 +26,74 @@ const currentCustomIcon = leaflet.icon({
   iconAnchor: [20, 40],
 });
 
+function getLocationCity(city: City): Pick<TCity, 'location'> {
+  switch (city) {
+    case City.Paris:
+      return {
+        location: {
+          latitude: 48.8534,
+          longitude: 2.3488,
+          zoom: 12
+        }
+      };
+    case City.Cologne:
+      return {
+        location: {
+          latitude: 50.8936,
+          longitude: 7.0731,
+          zoom: 12
+        }
+      };
+    case City.Brussels:
+      return {
+        location: {
+          latitude: 50.846707,
+          longitude: 4.352472,
+          zoom: 12
+        }
+      };
+    case City.Amsterdam:
+      return {
+        location: {
+          latitude: 52.374,
+          longitude: 4.88969,
+          zoom: 12
+        }
+      };
+    case City.Hamburg:
+      return {
+        location: {
+          latitude: 53.5753,
+          longitude: 10.0153,
+          zoom: 12
+        }
+      };
+    case City.Dusseldorf:
+      return {
+        location: {
+          latitude: 51.2217,
+          longitude: 6.77616,
+          zoom: 12
+        }
+      };
+  }
+}
+
 function Map(props: TMapProps): React.JSX.Element {
-  const {allOffersCity, currentCity, selectedOffers, page} = props;
+  const {offers, currentCity, selectedOffers, page} = props;
+  const cityLocation = getLocationCity(currentCity);
 
   const mapRef = useRef(null);
-  const map = useMap(mapRef, currentCity);
+  const map = useMap(mapRef, cityLocation);
 
 
   useEffect(() => {
     if(map) {
       const markerLayer = layerGroup().addTo(map);
-      allOffersCity.forEach(({...offer}) => {
+      offers.forEach(({ location, ...offer }) => {
         const marker = new Marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude,
+          lat: location.latitude,
+          lng: location.longitude,
         });
 
         marker.setIcon(
@@ -49,11 +103,14 @@ function Map(props: TMapProps): React.JSX.Element {
         ).addTo(markerLayer);
       });
 
+      map.setView({ lat: cityLocation.location.latitude, lng: cityLocation.location.longitude },
+        cityLocation.location.zoom);
+
       return () => {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, allOffersCity, selectedOffers]);
+  }, [map, offers, selectedOffers, cityLocation]);
 
   return (
     <section className={

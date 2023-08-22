@@ -1,3 +1,6 @@
+import { City } from '../const';
+import { TUser } from './review-type';
+
 export type TLocation = {
   latitude: number;
   longitude: number;
@@ -5,21 +8,30 @@ export type TLocation = {
 };
 
 export type TCity = {
-  name: string;
+  name: City;
   location: TLocation;
 };
+
+type TOfferHost = Omit<TUser, 'email' | 'token'>;
 
 export type TOffer = {
   id: string;
   title: string;
   type: string;
   price: number;
-  previewImage: string;
   city: TCity;
   location: TLocation;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
+  previewImage: string;
+  description: string;
+  bedrooms: number;
+  goods: string[];
+  images: string[];
+  maxAdults: number;
+  host: TOfferHost;
 };
 
 export type TOffers = TOffer[];
+

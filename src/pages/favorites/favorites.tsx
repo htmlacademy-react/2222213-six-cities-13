@@ -2,14 +2,9 @@ import React from 'react';
 import {Helmet} from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import FavoriteList from '../../components/favorites-list/favorites-list';
-import { TOffers } from '../../types/offer-type';
 
-type FavoriteOffersProps = {
-  offers: TOffers;
-}
+function FavoritePage(): React.JSX.Element {
 
-function FavoritePage(props: FavoriteOffersProps): React.JSX.Element {
-  const {offers} = props;
   return (
     <div className="page">
       <Helmet>
@@ -57,7 +52,7 @@ function FavoritePage(props: FavoriteOffersProps): React.JSX.Element {
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <FavoriteList offers={offers}/>
+            <FavoriteList/>
           </section>
         </div>
       </main>

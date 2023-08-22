@@ -3,7 +3,7 @@ import { TCity } from '../../types/offer-type';
 import { Map, TileLayer } from 'leaflet';
 
 function useMap(
-  mapRef: MutableRefObject<HTMLElement | null>, city: Pick<TCity, 'location'>): Map | null {
+  mapRef: MutableRefObject<HTMLElement | null>, cityLocation: Pick<TCity, 'location'>): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
 
@@ -11,10 +11,10 @@ function useMap(
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = new Map(mapRef.current, {
         center: {
-          lat: city.location.latitude,
-          lng: city.location.longitude
+          lat: cityLocation.location.latitude,
+          lng: cityLocation.location.longitude
         },
-        zoom: city.location.zoom
+        zoom: cityLocation.location.zoom
       });
 
       const layer = new TileLayer(
@@ -30,7 +30,7 @@ function useMap(
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [mapRef, cityLocation]);
 
   return map;
 }
