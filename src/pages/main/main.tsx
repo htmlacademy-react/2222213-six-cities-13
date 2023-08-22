@@ -17,6 +17,7 @@ function MainPages(): React.JSX.Element {
   const currentCity = useAppSelector((state) => state.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity);
   const isNotOffers = allOffersCity.length < 1;
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
 
   const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
 
@@ -36,7 +37,7 @@ function MainPages(): React.JSX.Element {
 
   const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
 
-  if(isNotOffers) {
+  if(isNotOffers && isOffersLoading) {
     return <Spinner/>;
   }
 

@@ -20,3 +20,5 @@ export const getReview = createAction<TReview[]>('review/get');
 export const getOffer = createAction<TOffer>('offer/get');
 
 export const getFavorites = createAction<TOffer[]>('favorite/get');
+
+export const setOffersLoadingStatus = createAction<boolean>('data/setOffersDataLoadingStatus');
