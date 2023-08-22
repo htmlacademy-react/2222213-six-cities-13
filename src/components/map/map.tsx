@@ -1,5 +1,5 @@
 import React, { useRef, useEffect} from 'react';
-import { TCity, TOffer, TOffers } from '../../types/offer-type';
+import { TCity, TOffer} from '../../types/offer-type';
 import useMap from '../hooks/use-map';
 import 'leaflet/dist/leaflet.css';
 import leaflet, {layerGroup, Marker} from 'leaflet';
@@ -8,7 +8,7 @@ import cn from 'classnames';
 
 
 type TMapProps = {
-  offers: TOffers;
+  offers: TOffer[];
   currentCity: City;
   selectedOffers: Pick<TOffer, 'id'> | undefined;
   page: 'main' | 'offers';

@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
           />
           <Route
             path={AppRoute.Offer}
-            element={<OffersPage/>}
+            element={<OffersPage authorizationStatus={authorizationStatus}/>}
           >
             <Route path={`${AppRoute.Offer}/:id`}/>
           </Route>

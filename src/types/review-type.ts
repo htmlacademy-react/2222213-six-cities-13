@@ -19,4 +19,6 @@ export type AuthData = {
   password: string;
 };
 
+export type TAddReview = Omit<TReview, 'id' | 'date' | 'user'>;
+
 export type TReviews = TReview[];

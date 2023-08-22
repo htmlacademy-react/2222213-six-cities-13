@@ -4,19 +4,23 @@ import {useParams} from 'react-router-dom';
 import ReviewsForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review/review-list';
 import Map from '../../components/map/map';
-import OfferList from '../../components/offer-list/offer-list';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
 import {isNotOffer} from '../../store/action';
 import Header from '../../components/headers/headers';
 import { fetchNearOffer, fetchOffer } from '../../store/api-actions/offers-api';
 import NotFound from '../not-found/not-found';
+import { AuthorizationStatus } from '../../const';
+import NearList from '../../components/near-list/near-list';
+
+type TOfferProps = {
+  authorizationStatus: AuthorizationStatus;
+}
 
 
-function OffersPage(): React.JSX.Element {
+function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const currentCity = useAppSelector((state) => state.currentCity);
-  const offers = useAppSelector((state) => state.offers);
   const nearOffers = useAppSelector((state) => state.nearOffers);
   const reviews = useAppSelector((state) => state.reviews);
   const offer = useAppSelector((state) => state.offer);
@@ -136,19 +140,14 @@ function OffersPage(): React.JSX.Element {
                   Reviews · <span className="reviews__amount">{reviews.length}</span>
                 </h2>
                 <ReviewList id={id}/>
-                <ReviewsForm/>
+                {authorizationStatus === AuthorizationStatus.Auth && <ReviewsForm id={id}/>}
               </section>
             </div>
           </div>
-          <Map offers={offers} selectedOffers={offer} page={'offers'} currentCity={currentCity}/>
+          <Map offers={[...nearOffers.slice(0,3), offer]} selectedOffers={offer} page={'offers'} currentCity={currentCity}/>
         </section>
         <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">
-              Other places in the neighbourhood
-            </h2>
-            <OfferList offers={nearOffers.slice(0, 3)} page={'offers'}/>
-          </section>
+          <NearList nearOffers={nearOffers}/>
         </div>
       </main>
     </div>
