@@ -37,7 +37,7 @@ function MainPages(): React.JSX.Element {
 
   const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
 
-  if(isNotOffers && isOffersLoading) {
+  if(isNotOffers || isOffersLoading) {
     return <Spinner/>;
   }
 

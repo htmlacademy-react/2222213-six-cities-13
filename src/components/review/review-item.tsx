@@ -1,5 +1,6 @@
 import React from 'react';
 import { TReview } from '../../types/review-type';
+import dayjs from 'dayjs';
 
 type TReviewProps = {
   review: TReview;
@@ -36,7 +37,7 @@ function Review(props: TReviewProps): React.JSX.Element {
           {comment}
         </p>
         <time className="reviews__time" dateTime={date}>
-          {date}
+          {dayjs(date).format('MMMM YYYY')}
         </time>
       </div>
     </li>
