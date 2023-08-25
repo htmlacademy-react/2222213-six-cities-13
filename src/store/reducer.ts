@@ -8,11 +8,12 @@ import {setCurrentCity,
   getReview,
   isNotOffer,
   getFavorites,
-  setOffersLoadingStatus}
+  setOffersLoadingStatus,
+  setUser}
   from './action';
 import {TOffer} from '../types/offer-type';
 import { AuthorizationStatus, City } from '../const';
-import { TReview } from '../types/review-type';
+import { TReview, TUser } from '../types/review-type';
 
 const initialState: {
   currentCity: City;
@@ -24,6 +25,7 @@ const initialState: {
   reviews: TReview[];
   favorites: TOffer[];
   isOffersLoading: boolean;
+  user: TUser | null;
 } = {
   currentCity: City.Paris,
   offers: [],
@@ -34,6 +36,7 @@ const initialState: {
   reviews: [],
   favorites: [],
   isOffersLoading: false,
+  user: null,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -67,6 +70,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setOffersLoadingStatus, (state, action) => {
       state.isOffersLoading = action.payload;
+    })
+    .addCase(setUser, (state, action) => {
+      state.user = action.payload;
     });
 });
 

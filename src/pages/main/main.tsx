@@ -10,14 +10,17 @@ import { SortDescription, sorting } from '../../const';
 import { TSorting } from '../../types/sorting';
 import Spinner from '../../components/spinner/spinner';
 import Header from '../../components/headers/headers';
+import cn from 'classnames';
+import MainPagesEmpty from '../../components/main-empty/main-empty';
 
 
 function MainPages(): React.JSX.Element {
   const allOffers = useAppSelector((state) => state.offers);
   const currentCity = useAppSelector((state) => state.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity);
-  const isNotOffers = allOffersCity.length < 1;
+  const isNotOffers = allOffersCity.length === 0;
   const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
+  const isEmpty = !allOffers.length;
 
   const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
 
@@ -41,13 +44,22 @@ function MainPages(): React.JSX.Element {
     return <Spinner/>;
   }
 
+  if(isEmpty) {
+    return <MainPagesEmpty/>;
+  } else {
+    <MainPages/>;
+  }
+
   return (
     <div className="page page--gray page--main">
       <Helmet>
         <title>6 cities</title>
       </Helmet>
       <Header/>
-      <main className="page__main page__main--index">
+      <main className={cn(
+        'page__main page__main--index',
+        { 'page__main--index-empty': isEmpty })}
+      >
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <CityList currentCity={currentCity}/>
@@ -71,3 +83,4 @@ function MainPages(): React.JSX.Element {
 }
 
 export default MainPages;
+
