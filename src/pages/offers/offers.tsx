@@ -12,6 +12,7 @@ import NotFound from '../not-found/not-found';
 import { AuthorizationStatus } from '../../const';
 import NearList from '../../components/near-list/near-list';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
+import ButtonBookmark from '../../components/bookmark-button/bookmark-button';
 
 type TOfferProps = {
   authorizationStatus: AuthorizationStatus;
@@ -83,12 +84,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
                 <h1 className="offer__name">
                   {title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width={31} height={33}>
-                    <use xlinkHref="#icon-bookmark" />
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <ButtonBookmark offer={offer} buttonView={'offers'}/>
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">

@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {TOffer} from '../../types/offer-type';
-import {Link, useNavigate} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const';
 import cn from 'classnames';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { favoritesChangeStatus } from '../../store/api-actions/favorites-api';
+import ButtonBookmark from '../bookmark-button/bookmark-button';
+
 
 type TOffersCardProps = {
   offer: TOffer;
@@ -13,21 +13,9 @@ type TOffersCardProps = {
 };
 
 function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Element {
-  const dispatch = useAppDispatch();
-
   const {
-    id, title, type, price, previewImage, isPremium, rating, isFavorite
+    id, title, type, price, previewImage, isPremium, rating
   } = offer;
-
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const navigate = useNavigate();
-
-  const [isFavorites, setIsFavorites] = useState(isFavorite);
-
-  const handelChangeStatus = () => {
-    dispatch(favoritesChangeStatus({ id, status: !isFavorites ? 1 : 0 }));
-    setIsFavorites((prevState) => !prevState);
-  };
 
   return (
     <article className={cn(
@@ -67,27 +55,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button
-            className={cn(
-              'place-card__bookmark-button button',
-              { 'place-card__bookmark-button--active': isFavorites })}
-            type="button" onClick={() => {
-              if (authorizationStatus !== AuthorizationStatus.Auth) {
-                navigate(AppRoute.Login);
-              } else {
-                handelChangeStatus();
-              }
-            }}
-          >
-            <svg
-              className="place-card__bookmark-icon"
-              width={18}
-              height={19}
-            >
-              <use xlinkHref="#icon-bookmark" />
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          <ButtonBookmark offer={offer} buttonView={'card'}/>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
