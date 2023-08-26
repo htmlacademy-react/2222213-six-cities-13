@@ -35,7 +35,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
     }
 
     return () => {
-      dispatch(isNotOffer);
+      dispatch(isNotOffer());
     };
   },[dispatch, id]);
 
