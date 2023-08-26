@@ -11,6 +11,7 @@ function ReviewList({id}: ReviewListProps): React.JSX.Element {
 
   const dispatch = useAppDispatch();
   const reviews = useAppSelector((state) => state.reviews);
+  const sortReview = [...reviews].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   useEffect(() => {
     if(id) {
@@ -20,7 +21,7 @@ function ReviewList({id}: ReviewListProps): React.JSX.Element {
 
   return (
     <ul className="reviews__list">
-      {reviews.map((review) => <Review key={review.id} review={review}/>)}
+      {sortReview.slice(0, 10).map((review) => <Review key={review.id} review={review}/>)}
     </ul>
   );
 }

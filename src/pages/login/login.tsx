@@ -1,13 +1,15 @@
 import React, { FormEvent, useRef } from 'react';
 import {Helmet} from 'react-helmet-async';
-import {Link, useNavigate} from 'react-router-dom';
-import { useAppDispatch } from '../../components/hooks';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
 import { loginAction } from '../../store/api-actions/authorization-api';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 function LoginPage(): React.JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -23,6 +25,10 @@ function LoginPage(): React.JSX.Element {
       navigate(AppRoute.Main);
     }
   };
+
+  if(isAuth) {
+    return <Navigate to={AppRoute.Main} />;
+  }
 
   return (
     <div className="page page--gray page--login">

@@ -11,6 +11,7 @@ import { fetchNearOffer, fetchOffer } from '../../store/api-actions/offers-api';
 import NotFound from '../not-found/not-found';
 import { AuthorizationStatus } from '../../const';
 import NearList from '../../components/near-list/near-list';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
 
 type TOfferProps = {
   authorizationStatus: AuthorizationStatus;
@@ -24,6 +25,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
   const nearOffers = useAppSelector((state) => state.nearOffers);
   const reviews = useAppSelector((state) => state.reviews);
   const offer = useAppSelector((state) => state.offer);
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
 
 
   useEffect(() => {
@@ -33,11 +35,13 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
     }
 
     return () => {
-      dispatch(isNotOffer);
+      dispatch(isNotOffer());
     };
   },[dispatch, id]);
 
-  if (!offer) {
+  if (isOffersLoading) {
+    return <LoadingScreen/>;
+  } else if (!offer) {
     return <NotFound/>;
   }
 

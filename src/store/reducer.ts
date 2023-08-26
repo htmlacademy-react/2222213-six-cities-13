@@ -1,8 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {setCurrentCity, getNearOffers, getOffers, requireAuthorization, setError, getOffer, getReview, isNotOffer, getFavorites} from './action';
+import {setCurrentCity,
+  getNearOffers,
+  getOffers,
+  requireAuthorization,
+  setError,
+  getOffer,
+  getReview,
+  isNotOffer,
+  getFavorites,
+  setOffersLoadingStatus,
+  setUser}
+  from './action';
 import {TOffer} from '../types/offer-type';
 import { AuthorizationStatus, City } from '../const';
-import { TReview } from '../types/review-type';
+import { TReview, TUser } from '../types/review-type';
 
 const initialState: {
   currentCity: City;
@@ -13,6 +24,8 @@ const initialState: {
   offer: TOffer | null;
   reviews: TReview[];
   favorites: TOffer[];
+  isOffersLoading: boolean;
+  user: TUser | null;
 } = {
   currentCity: City.Paris,
   offers: [],
@@ -22,6 +35,8 @@ const initialState: {
   offer: null,
   reviews: [],
   favorites: [],
+  isOffersLoading: false,
+  user: null,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -52,6 +67,12 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(getFavorites, (state, action) => {
       state.favorites = action.payload;
+    })
+    .addCase(setOffersLoadingStatus, (state, action) => {
+      state.isOffersLoading = action.payload;
+    })
+    .addCase(setUser, (state, action) => {
+      state.user = action.payload;
     });
 });
 

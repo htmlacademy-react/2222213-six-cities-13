@@ -18,7 +18,8 @@ type TReviewFormProps = {
 const initialState = {
   comment: '',
   rating: 0,
-  isDisabled: false
+  isDisabled: false,
+  minLength: 50,
 };
 
 function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
@@ -29,7 +30,8 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
   function handleTextChange(evt: ChangeEvent<HTMLTextAreaElement>) {
     setFormData({
       ...formData,
-      comment: evt.target.value
+      comment: evt.target.value,
+      minLength: formData.minLength
     });
   }
 
@@ -96,7 +98,7 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formData.comment}
         maxLength={300}
-        minLength={50}
+        minLength={formData.minLength}
         required
         onChange={handleTextChange}
         disabled={formData.isDisabled}
@@ -106,12 +108,12 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
           To submit review please make sure to set
           <span className="reviews__star">rating</span> and describe
           your stay with at least
-          <b className="reviews__text-amount">50 characters</b>.
+          <b className="reviews__text-amount">{formData.minLength - formData.comment.length <= 0 ? '' : formData.minLength - formData.comment.length} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={formData.isDisabled}
+          disabled={formData.comment.length <= 50 || formData.rating <= 0}
         >
           Submit
         </button>

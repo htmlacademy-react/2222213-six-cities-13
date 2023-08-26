@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TOffer} from '../../types/offer-type';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
+import {Link, useNavigate} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import cn from 'classnames';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { favoritesChangeStatus } from '../../store/api-actions/favorites-api';
 
 type TOffersCardProps = {
   offer: TOffer;
@@ -11,9 +13,21 @@ type TOffersCardProps = {
 };
 
 function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Element {
+  const dispatch = useAppDispatch();
+
   const {
-    id, title, type, price, previewImage, isPremium, rating
+    id, title, type, price, previewImage, isPremium, rating, isFavorite
   } = offer;
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const navigate = useNavigate();
+
+  const [isFavorites, setIsFavorites] = useState(isFavorite);
+
+  const handelChangeStatus = () => {
+    dispatch(favoritesChangeStatus({ id, status: !isFavorites ? 1 : 0 }));
+    setIsFavorites((prevState) => !prevState);
+  };
 
   return (
     <article className={cn(
@@ -54,8 +68,16 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
-            className="place-card__bookmark-button button"
-            type="button"
+            className={cn(
+              'place-card__bookmark-button button',
+              { 'place-card__bookmark-button--active': isFavorites })}
+            type="button" onClick={() => {
+              if (authorizationStatus !== AuthorizationStatus.Auth) {
+                navigate(AppRoute.Login);
+              } else {
+                handelChangeStatus();
+              }
+            }}
           >
             <svg
               className="place-card__bookmark-icon"

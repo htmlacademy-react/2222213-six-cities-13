@@ -4,9 +4,12 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 import { Link } from 'react-router-dom';
 import { logoutAction } from '../../store/api-actions/authorization-api';
 
+
 function Header(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const user = useAppSelector((state) => state.user);
+  const favorites = useAppSelector((state) => state.favorites);
 
   return(
     <header className="header">
@@ -25,7 +28,7 @@ function Header(): React.JSX.Element {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              { authorizationStatus === AuthorizationStatus.Auth &&
+              { authorizationStatus === AuthorizationStatus.Auth && user &&
                 <li className="header__nav-item user">
                   <Link
                     className="header__nav-link header__nav-link--profile"
@@ -33,9 +36,9 @@ function Header(): React.JSX.Element {
                   >
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
+                      {user.email}
                     </span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{favorites.length}</span>
                   </Link>
                 </li>}
               <li className="header__nav-item">
