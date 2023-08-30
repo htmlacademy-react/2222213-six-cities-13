@@ -20,6 +20,7 @@ const initialState = {
   rating: 0,
   isDisabled: false,
   minLength: 50,
+  maxLength: 300,
 };
 
 function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
@@ -31,7 +32,8 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
     setFormData({
       ...formData,
       comment: evt.target.value,
-      minLength: formData.minLength
+      minLength: formData.minLength,
+      maxLength: formData.maxLength
     });
   }
 
@@ -43,8 +45,8 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
   }
 
   function handelSubmit() {
+    const { comment, rating } = formData;
     if(id) {
-      const { comment, rating } = formData;
       setFormData({ ...formData, isDisabled: true });
       dispatch(addReviews({
         id,
@@ -55,6 +57,10 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
       });
     }
   }
+
+  const isValid = formData.comment.length >= formData.minLength &&
+    formData.comment.length <= formData.maxLength &&
+    formData.rating !== 0;
 
   return (
     <form className="reviews__form form" onSubmit={(evt) => {
@@ -73,9 +79,10 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
               <input
                 className="form__rating-input visually-hidden"
                 name="rating"
-                defaultValue={rating}
+                value={rating}
                 id={`${rating}-stars`}
                 type="radio"
+                checked={String(formData.rating) === rating}
                 onChange={handleRatingChange}
                 disabled={formData.isDisabled}
               />
@@ -97,23 +104,21 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formData.comment}
-        maxLength={300}
-        minLength={formData.minLength}
         required
         onChange={handleTextChange}
         disabled={formData.isDisabled}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-          To submit review please make sure to set
+          To submit review please make sure to set{' '}
           <span className="reviews__star">rating</span> and describe
-          your stay with at least
+          your stay with at least{' '}
           <b className="reviews__text-amount">{formData.minLength - formData.comment.length <= 0 ? '' : formData.minLength - formData.comment.length} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={formData.comment.length <= 50 || formData.rating <= 0}
+          disabled={!isValid}
         >
           Submit
         </button>

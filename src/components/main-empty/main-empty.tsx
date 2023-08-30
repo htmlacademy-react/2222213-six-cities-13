@@ -13,7 +13,7 @@ function MainPagesEmpty(): React.JSX.Element {
         <title>6 cities</title>
       </Helmet>
       <Header/>
-      <main className="page__main page__main--index">
+      <main className="page__main page__main--index page__main--index-empty">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <CityList currentCity={currentCity}/>

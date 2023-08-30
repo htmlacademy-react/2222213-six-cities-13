@@ -1,7 +1,7 @@
 import React from 'react';
 import {TOffer} from '../../types/offer-type';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
+import {AppRoute, capitalize, transformRatingToPercent} from '../../const';
 import cn from 'classnames';
 import ButtonBookmark from '../bookmark-button/bookmark-button';
 
@@ -59,7 +59,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${rating * 20}%` }} />
+            <span style={{ width: `${transformRatingToPercent(rating)}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
@@ -68,7 +68,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
             {title}
           </Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">{capitalize(type)}</p>
       </div>
     </article>
   );

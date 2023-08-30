@@ -23,7 +23,7 @@ function Sorting({ activeSorting, handleSorting }: TSortingProps): React.JSX.Ele
         tabIndex={0}
         onClick={() => setIsOpened(!isOpened)}
       >
-        {activeSorting}
+        {SortDescription[activeSorting]}
         <svg className="places__sorting-arrow" width={7} height={4}>
           <use xlinkHref="#icon-arrow-select" />
         </svg>
