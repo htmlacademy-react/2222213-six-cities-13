@@ -4,15 +4,17 @@ import {useParams} from 'react-router-dom';
 import ReviewsForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review/review-list';
 import Map from '../../components/map/map';
-import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { useAppDispatch, useAppSelector} from '../../components/hooks';
 import {isNotOffer} from '../../store/action';
 import Header from '../../components/headers/headers';
 import { fetchNearOffer, fetchOffer } from '../../store/api-actions/offers-api';
 import NotFound from '../not-found/not-found';
-import { AuthorizationStatus } from '../../const';
+import { AuthorizationStatus, capitalize, transformRatingToPercent } from '../../const';
 import NearList from '../../components/near-list/near-list';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 import ButtonBookmark from '../../components/bookmark-button/bookmark-button';
+import cn from 'classnames';
+
 
 type TOfferProps = {
   authorizationStatus: AuthorizationStatus;
@@ -27,7 +29,6 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
   const reviews = useAppSelector((state) => state.reviews);
   const offer = useAppSelector((state) => state.offer);
   const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
-
 
   useEffect(() => {
     if(id) {
@@ -47,7 +48,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
   }
 
   const {
-    images, isPremium, title,
+    images, isPremium, title, type,
     rating, bedrooms, maxAdults,
     price, goods, description,
     host: { avatarUrl, isPro, name }
@@ -88,18 +89,18 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: `${rating * 20}%` }} />
+                  <span style={{ width: `${transformRatingToPercent(rating)}%` }} />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{rating}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">Apartment</li>
+                <li className="offer__feature offer__feature--entire">{capitalize(type)}</li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {bedrooms} Bedrooms
+                  {bedrooms} {bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {maxAdults} adults
+                  Max {maxAdults} {maxAdults === 1 ? 'adult' : 'adults'}
                 </li>
               </ul>
               <div className="offer__price">
@@ -117,7 +118,11 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+                  <div className={cn(
+                    'offer__avatar-wrapper user__avatar-wrapper',
+                    {'offer__avatar-wrapper--pro': isPro}
+                  )}
+                  >
                     <img
                       className="offer__avatar user__avatar"
                       src={avatarUrl}
@@ -144,7 +149,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
               </section>
             </div>
           </div>
-          <Map offers={[...nearOffers.slice(0,3), offer]} selectedOffers={offer} page={'offers'} currentCity={currentCity}/>
+          <Map offers={[...nearOffers.slice(0, 3), offer]} selectedOffers={offer} page={'offers'} currentCity={currentCity}/>
         </section>
         <div className="container">
           <NearList nearOffers={nearOffers}/>

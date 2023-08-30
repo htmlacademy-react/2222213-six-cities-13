@@ -63,7 +63,7 @@ function MainPages(): React.JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{allOffersCity.length} places to stay in {currentCity}</b>
+              <b className="places__found">{allOffersCity.length} {allOffersCity.length === 1 ? 'place' : 'places'} to stay in {currentCity}</b>
               <Sorting activeSorting={activeSorting} handleSorting={handleSorting}/>
               <OfferList offers={sortOffers} onListItemHover={handleListItemHover} page={'main'} />
             </section>

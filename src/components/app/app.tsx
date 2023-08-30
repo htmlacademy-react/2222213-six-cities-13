@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
 import {HelmetProvider} from 'react-helmet-async';
-import {AppRoute} from '../../const';
+import {AppRoute, AuthorizationStatus} from '../../const';
 import MainPages from '../../pages/main/main';
 import FavoritePage from '../../pages/favorites/favorites';
 import OffersPage from '../../pages/offers/offers';
@@ -9,10 +9,15 @@ import LoginPage from '../../pages/login/login';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
 import { useAppSelector } from '../hooks';
+import Spinner from '../spinner/spinner';
 
 
 function App(): React.JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return <Spinner/>;
+  }
 
   return (
     <HelmetProvider>

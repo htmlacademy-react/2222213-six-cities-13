@@ -24,7 +24,7 @@ function ButtonBookmark({offer, buttonView}: TButtonBookmarkProps): React.JSX.El
 
   const handelChangeStatus = () => {
     dispatch(favoritesChangeStatus({ id, status: !isFavorites ? 1 : 0 }));
-    setIsFavorites((prevState) => !prevState);
+    setIsFavorites(!isFavorite);
   };
 
   return (
