@@ -1,13 +1,13 @@
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import {Helmet} from 'react-helmet-async';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
 import { loginAction } from '../../store/api-actions/authorization-api';
 import { AppRoute, AuthorizationStatus, City} from '../../const';
 import loginStyles from './login-page.module.css';
+import { setCurrentCity } from '../../store/action';
 
 function LoginPage(): React.JSX.Element {
-  // const currentCity = useAppSelector((state) => state.currentCity);
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
@@ -17,6 +17,13 @@ function LoginPage(): React.JSX.Element {
 
   const [isCorrectLogin, setIsCorrectLogin] = useState(true);
   const [isCorrectPassword, setIsCorrectPassword] = useState(true);
+  const [randomCity, setRandomCity] = useState<City | null>(null);
+
+  useEffect(() => {
+    const citiesList = Object.values(City).map((city) => city);
+    const randomIndex = Math.floor(Math.random() * (citiesList.length - 1));
+    setRandomCity(citiesList[randomIndex]);
+  }, []);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -52,9 +59,11 @@ function LoginPage(): React.JSX.Element {
     }
   };
 
-  const citiesList = Object.values(City).map((city) => city);
-  const randomIndex = Math.floor(Math.random() * (citiesList.length - 1));
-  const randomCity = citiesList[randomIndex];
+  const handleLocationClick = () => {
+    if(randomCity) {
+      dispatch(setCurrentCity(randomCity));
+    }
+  };
 
   if(isAuth) {
     return <Navigate to={AppRoute.Main} />;
@@ -125,9 +134,9 @@ function LoginPage(): React.JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
+              <Link className="locations__item-link" to={AppRoute.Main} onClick={handleLocationClick}>
                 <span>{randomCity}</span>
-              </a>
+              </Link>
             </div>
           </section>
         </div>

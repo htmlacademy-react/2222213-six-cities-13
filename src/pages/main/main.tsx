@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import OfferList from '../../components/offer-list/offer-list';
 import {Helmet} from 'react-helmet-async';
 import {TOffer} from '../../types/offer-type';
@@ -11,6 +11,8 @@ import { TSorting } from '../../types/sorting';
 import Spinner from '../../components/spinner/spinner';
 import Header from '../../components/headers/headers';
 import MainPagesEmpty from '../../components/main-empty/main-empty';
+import { fetchOffers } from '../../store/api-actions/offers-api';
+import { store } from '../../store';
 
 
 function MainPages(): React.JSX.Element {
@@ -26,6 +28,10 @@ function MainPages(): React.JSX.Element {
     undefined
   );
 
+  useEffect(() => {
+    store.dispatch(fetchOffers());
+  }, []);
+
   function handleSorting(sort: TSorting) {
     setActiveSorting(sort);
   }
@@ -38,14 +44,12 @@ function MainPages(): React.JSX.Element {
 
   const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
 
-  if(isNotOffers || isOffersLoading) {
+  if(isOffersLoading) {
     return <Spinner/>;
   }
 
   if(isNotOffers) {
     return <MainPagesEmpty/>;
-  } else {
-    <MainPages/>;
   }
 
   return (

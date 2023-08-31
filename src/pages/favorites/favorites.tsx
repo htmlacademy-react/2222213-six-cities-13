@@ -25,7 +25,7 @@ function FavoritePage(): React.JSX.Element {
       <Header/>
       <main className={cn(
         'page__main page__main--favorites',
-        { 'page__main--favorites-empty': favoritesOffersIsEmpty }
+        { 'page__main--favorites-empty page--favorites-empty': favoritesOffersIsEmpty }
       )}
       >
         <div className="page__favorites-container container">
