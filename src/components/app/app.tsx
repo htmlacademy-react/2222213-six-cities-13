@@ -41,7 +41,7 @@ function App(): React.JSX.Element {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus={authorizationStatus}
+                authorizationStatus={authorizationStatus === AuthorizationStatus.Auth}
               >
                 <FavoritePage/>
               </PrivateRoute>

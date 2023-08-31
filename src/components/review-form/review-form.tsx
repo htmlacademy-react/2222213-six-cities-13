@@ -51,9 +51,18 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
       dispatch(addReviews({
         id,
         reviewData: { comment, rating }
-      })).then(() => {
-        setFormData(initialState);
-        dispatch(fetchReviews(id));
+      })).then((req) => {
+        const request = req.payload;
+        if(request) {
+          setFormData(initialState);
+          dispatch(fetchReviews(id));
+        } else {
+          setFormData({ ...formData, isDisabled: false });
+        }
+      }).catch((error: Error) => {
+        const err = error;
+        setFormData({ ...formData, isDisabled: false });
+        return err;
       });
     }
   }
@@ -118,7 +127,7 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || formData.isDisabled}
         >
           Submit
         </button>
