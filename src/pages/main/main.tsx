@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import OfferList from '../../components/offer-list/offer-list';
 import {Helmet} from 'react-helmet-async';
-import {TOffer} from '../../types/offer-type';
 import Map from '../../components/map/map';
 import CityList from '../../components/citi-list/citi-list';
 import { useAppSelector } from '../../components/hooks';
@@ -16,17 +15,13 @@ import { store } from '../../store';
 
 
 function MainPages(): React.JSX.Element {
-  const allOffers = useAppSelector((state) => state.offers);
-  const currentCity = useAppSelector((state) => state.currentCity);
+  const allOffers = useAppSelector((state) => state.offers.offers);
+  const currentCity = useAppSelector((state) => state.currentCity.currentCity);
   const allOffersCity = allOffers.filter((offer) => offer.city.name === currentCity);
   const isNotOffers = allOffersCity.length === 0;
-  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
+  const isOffersLoading = useAppSelector((state) => state.offer.isLoading);
 
   const [activeSorting, setActiveSorting] = useState<TSorting>(SortDescription.Popular);
-
-  const [selectedOffers, setSelectedOffers] = useState<Pick<TOffer, 'id'> | undefined>(
-    undefined
-  );
 
   useEffect(() => {
     store.dispatch(fetchOffers());
@@ -34,12 +29,6 @@ function MainPages(): React.JSX.Element {
 
   function handleSorting(sort: TSorting) {
     setActiveSorting(sort);
-  }
-
-  function handleListItemHover(id: string) {
-    if (selectedOffers?.id !== id) {
-      setSelectedOffers({ id });
-    }
   }
 
   const sortOffers = sorting[activeSorting](allOffersCity).map((offer) => offer);
@@ -69,10 +58,10 @@ function MainPages(): React.JSX.Element {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{allOffersCity.length} {allOffersCity.length === 1 ? 'place' : 'places'} to stay in {currentCity}</b>
               <Sorting activeSorting={activeSorting} handleSorting={handleSorting}/>
-              <OfferList offers={sortOffers} onListItemHover={handleListItemHover} page={'main'} />
+              <OfferList offers={sortOffers} page={'main'} />
             </section>
             <div className="cities__right-section">
-              <Map offers={allOffersCity} currentCity={currentCity} selectedOffers={selectedOffers} page={'main'}/>
+              <Map offers={allOffersCity} currentCity={currentCity} page={'main'}/>
             </div>
           </div>
         </div>

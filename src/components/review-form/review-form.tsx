@@ -1,7 +1,8 @@
-import React, {useState, ChangeEvent, Fragment} from 'react';
+import React, {ChangeEvent, Fragment, useEffect} from 'react';
 import { TOffer } from '../../types/offer-type';
-import { useAppDispatch } from '../hooks';
-import { addReviews, fetchReviews } from '../../store/api-actions/review-api';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { submitReview } from '../../store/api-actions/review-api';
+import { setFormReviewValid, updateComment, updateRating } from '../../store/slices/review-form.slices';
 
 const ratingAndTitle = {
   '1': 'terribly',
@@ -15,66 +16,45 @@ type TReviewFormProps = {
   id: TOffer['id'] | undefined;
 }
 
-const initialState = {
-  comment: '',
-  rating: 0,
-  isDisabled: false,
-  minLength: 50,
-  maxLength: 300,
-};
+enum ReviewLength {
+  Min = 50,
+  Max = 300
+}
 
 function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
   const dispatch = useAppDispatch();
+  const formData = useAppSelector((state) => state.reviewForm);
 
-  const [formData, setFormData] = useState(initialState);
-
-  function handleTextChange(evt: ChangeEvent<HTMLTextAreaElement>) {
-    setFormData({
-      ...formData,
-      comment: evt.target.value,
-      minLength: formData.minLength,
-      maxLength: formData.maxLength
-    });
+  function handleCommentChange(evt: ChangeEvent<HTMLTextAreaElement>) {
+    dispatch(updateComment(evt.target.value));
   }
 
   function handleRatingChange(evt: ChangeEvent<HTMLInputElement>) {
-    setFormData({
-      ...formData,
-      rating: Number(evt.target.value)
-    });
+    dispatch(updateRating(Number(evt.target.value)));
   }
 
-  function handelSubmit() {
+  useEffect(() => {
+    if (formData.comment.length >= ReviewLength.Min && formData.comment.length <= ReviewLength.Max && formData.rating !== null) {
+      dispatch(setFormReviewValid(true));
+    } else {
+      dispatch(setFormReviewValid(false));
+    }
+  }, [dispatch, formData]);
+
+  function handleFormSubmit() {
     const { comment, rating } = formData;
-    if(id) {
-      setFormData({ ...formData, isDisabled: true });
-      dispatch(addReviews({
+    if (id) {
+      dispatch(submitReview({
         id,
         reviewData: { comment, rating }
-      })).then((req) => {
-        const request = req.payload;
-        if(request) {
-          setFormData(initialState);
-          dispatch(fetchReviews(id));
-        } else {
-          setFormData({ ...formData, isDisabled: false });
-        }
-      }).catch((error: Error) => {
-        const err = error;
-        setFormData({ ...formData, isDisabled: false });
-        return err;
-      });
+      }));
     }
   }
-
-  const isValid = formData.comment.length >= formData.minLength &&
-    formData.comment.length <= formData.maxLength &&
-    formData.rating !== 0;
 
   return (
     <form className="reviews__form form" onSubmit={(evt) => {
       evt.preventDefault();
-      handelSubmit();
+      handleFormSubmit();
     }}
     >
       <label className="reviews__label form__label" htmlFor="review">
@@ -86,14 +66,15 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
           .map(([rating, title]) => (
             <Fragment key={rating}>
               <input
+                required
                 className="form__rating-input visually-hidden"
                 name="rating"
-                value={rating}
                 id={`${rating}-stars`}
                 type="radio"
+                value={rating}
                 checked={String(formData.rating) === rating}
                 onChange={handleRatingChange}
-                disabled={formData.isDisabled}
+                disabled={formData.isSends}
               />
               <label
                 htmlFor={`${rating}-stars`}
@@ -113,23 +94,24 @@ function ReviewsForm({id}: TReviewFormProps): React.JSX.Element {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formData.comment}
+        minLength={ReviewLength.Min}
         required
-        onChange={handleTextChange}
-        disabled={formData.isDisabled}
+        onChange={handleCommentChange}
+        disabled={formData.isSends}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set{' '}
           <span className="reviews__star">rating</span> and describe
           your stay with at least{' '}
-          <b className="reviews__text-amount">{formData.minLength - formData.comment.length <= 0 ? '' : formData.minLength - formData.comment.length} characters</b>.
+          <b className="reviews__text-amount">50 characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isValid || formData.isDisabled}
+          disabled={!formData.isValid || formData.isSends}
         >
-          Submit
+          {formData.isSends ? 'Sending...' : 'Submit'}
         </button>
       </div>
     </form>

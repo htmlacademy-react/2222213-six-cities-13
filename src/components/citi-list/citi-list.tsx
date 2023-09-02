@@ -1,8 +1,8 @@
 import React from 'react';
 import { useAppDispatch } from '../hooks';
-import { setCurrentCity } from '../../store/action';
 import { AppRoute, City } from '../../const';
 import { Link } from 'react-router-dom';
+import { setCurrentCity } from '../../store/slices/current-city-slices';
 
 type TCityListProps = {
   currentCity: City;
@@ -11,7 +11,7 @@ type TCityListProps = {
 function CityList({currentCity}: TCityListProps): React.JSX.Element {
   const dispatch = useAppDispatch();
 
-  const changeCityHandler = (city: City) => {
+  const handleChangeCity = (city: City) => {
     dispatch(setCurrentCity(city));
   };
 
@@ -22,7 +22,7 @@ function CityList({currentCity}: TCityListProps): React.JSX.Element {
           <li key={city} className="locations__item">
             <Link className={`locations__item-link ${currentCity === city ? 'tabs__item--active' : 'tabs__item'}`}
               to={AppRoute.Main}
-              onClick={()=>changeCityHandler(city)}
+              onClick={()=>handleChangeCity(city)}
             >
               <span>{city}</span>
             </Link>

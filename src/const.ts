@@ -20,10 +20,10 @@ export const URL_MARKER_DEFAULT = 'img/pin.svg';
 export const URL_MARKER_CURRENT = 'img/pin-active.svg';
 
 export enum OfferType {
-  Apartment = 'Apartment',
-  Room = 'Private Room',
-  House = 'House',
-  Hotel = 'Hotel'
+  Apartment = 'apartment',
+  Room = 'room',
+  House = 'house',
+  Hotel = 'hotel'
 }
 
 export enum City {
@@ -70,11 +70,6 @@ export enum ApiRoute {
 }
 
 export const capitalize = (text: string): string => text[0].toUpperCase() + text.slice(1);
-
-export const LoginFormEmpty = {
-  Email: '',
-  Password: '',
-} as const;
 
 const RatingConfig = {
   MaxRating: 5,

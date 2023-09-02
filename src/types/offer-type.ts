@@ -1,4 +1,4 @@
-import { City } from '../const';
+import { City, OfferType } from '../const';
 import { TUser } from './review-type';
 
 export type TLocation = {
@@ -17,7 +17,7 @@ type TOfferHost = Omit<TUser, 'email' | 'token'>;
 export type TOffer = {
   id: string;
   title: string;
-  type: string;
+  type: OfferType;
   price: number;
   city: TCity;
   location: TLocation;

@@ -1,32 +1,48 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AppDispatch, State } from '../../types/state';
+import { AppDispatch, State } from '../../types/state.ts';
 import { AxiosInstance } from 'axios';
-import { TOffer } from '../../types/offer-type';
-import { ApiRoute } from '../../const';
-import { getFavorites } from '../action';
+import { TOffer } from '../../types/offer-type.ts';
+import { ApiRoute, FavoriteStatus } from '../../const.ts';
 
-export const fetchFavorites = createAsyncThunk<void, undefined, {
+
+export const fetchFavoritesOffers = createAsyncThunk<TOffer[], undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }
 >(
-  'data/fetchFavorites',
-  async (_arg, { dispatch, extra: api }) => {
+  'data/fetchFavoritesOffers',
+  async (_arg, { extra: api }) => {
     const { data } = await api.get<TOffer[]>(ApiRoute.Favorite);
-    dispatch(getFavorites(data));
+
+    return data;
   },
 );
 
-export const favoritesChangeStatus = createAsyncThunk<void, { id: TOffer['id']; status: 0 | 1 }, {
+export const addFavorite = createAsyncThunk<TOffer, { id: TOffer['id'] }, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }
 >(
-  'data/changeStatus',
-  async ({ id, status }, { dispatch, extra: api }) => {
-    await api.post<TOffer>(`${ApiRoute.Favorite}/${id}/${status}`);
-    dispatch(fetchFavorites());
-  },
+  'data/addFavoritesOffers',
+  async ({ id }, { extra: api }) => {
+    const { data } = await api.post<TOffer>(`${ApiRoute.Favorite}/${id}/${FavoriteStatus.Add}`);
+
+    return data;
+  }
+);
+
+export const deleteFavorite = createAsyncThunk<TOffer, { id: TOffer['id'] }, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}
+>(
+  'data/deleteFavoritesOffers',
+  async ({ id }, { extra: api }) => {
+    const { data } = await api.post<TOffer>(`${ApiRoute.Favorite}/${id}/${FavoriteStatus.Delete}`);
+
+    return data;
+  }
 );

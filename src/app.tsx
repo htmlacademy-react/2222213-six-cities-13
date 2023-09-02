@@ -1,19 +1,21 @@
 import React from 'react';
-import {Route, BrowserRouter, Routes} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import {HelmetProvider} from 'react-helmet-async';
-import {AppRoute, AuthorizationStatus} from '../../const';
-import MainPages from '../../pages/main/main';
-import FavoritePage from '../../pages/favorites/favorites';
-import OffersPage from '../../pages/offers/offers';
-import LoginPage from '../../pages/login/login';
-import NotFound from '../../pages/not-found/not-found';
-import PrivateRoute from '../private-route/private-route';
-import { useAppSelector } from '../hooks';
-import Spinner from '../spinner/spinner';
+import {AppRoute, AuthorizationStatus} from './const';
+import MainPages from './pages/main/main';
+import FavoritePage from './pages/favorites/favorites';
+import OffersPage from './pages/offers/offers';
+import LoginPage from './pages/login/login';
+import NotFound from './pages/not-found/not-found';
+import PrivateRoute from './components/private-route/private-route';
+import { useAppSelector } from './components/hooks';
+import Spinner from './components/spinner/spinner';
+import HistoryRouter from './components/history-router/history-router';
+import browserHistory from './store/middleware/redirect';
 
 
 function App(): React.JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
     return <Spinner/>;
@@ -21,7 +23,7 @@ function App(): React.JSX.Element {
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <HistoryRouter history={browserHistory}>
         <Routes>
           <Route
             path={AppRoute.Main}
@@ -52,7 +54,7 @@ function App(): React.JSX.Element {
             element={<NotFound/>}
           />
         </Routes>
-      </BrowserRouter>
+      </HistoryRouter>
     </HelmetProvider>
   );
 }

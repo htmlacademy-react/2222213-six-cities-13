@@ -21,4 +21,4 @@ export type AuthData = {
 
 export type TAddReview = Omit<TReview, 'id' | 'date' | 'user'>;
 
-export type TReviews = TReview[];
+

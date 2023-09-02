@@ -5,15 +5,19 @@ import ReviewsForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review/review-list';
 import Map from '../../components/map/map';
 import { useAppDispatch, useAppSelector} from '../../components/hooks';
-import {isNotOffer} from '../../store/action';
 import Header from '../../components/headers/headers';
-import { fetchNearOffer, fetchOffer } from '../../store/api-actions/offers-api';
 import NotFound from '../not-found/not-found';
 import { AuthorizationStatus, capitalize, transformRatingToPercent } from '../../const';
 import NearList from '../../components/near-list/near-list';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 import ButtonBookmark from '../../components/bookmark-button/bookmark-button';
 import cn from 'classnames';
+import { fetchOffer } from '../../store/api-actions/offer-api';
+import { fetchNearOffer } from '../../store/api-actions/near-offers';
+import { addSelectedOffer, dropOffer } from '../../store/slices/offer-slices';
+import { dropNearOffers } from '../../store/slices/near-offers-slices';
+import { clearFormReview } from '../../store/slices/review-form.slices';
+import { addFavorite, deleteFavorite } from '../../store/api-actions/favorites-api';
 
 
 type TOfferProps = {
@@ -24,27 +28,36 @@ type TOfferProps = {
 function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const currentCity = useAppSelector((state) => state.currentCity);
-  const nearOffers = useAppSelector((state) => state.nearOffers);
-  const reviews = useAppSelector((state) => state.reviews);
-  const offer = useAppSelector((state) => state.offer);
-  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
+  const currentCity = useAppSelector((state) => state.currentCity.currentCity);
+  const nearOffers = useAppSelector((state) => state.nearOffers.nearOffers);
+  const reviews = useAppSelector((state) => state.reviews.reviews);
+  const offer = useAppSelector((state) => state.offer.offer);
+  const isOffersLoading = useAppSelector((state) => state.offers.isLoading);
+  const favoritesOffers = useAppSelector((state) => state.favoritesOffers.favoritesOffers);
+  const isFavorite = !!favoritesOffers.find((item) => item.id === id);
 
   useEffect(() => {
-    if(id) {
-      dispatch(fetchOffer(id));
-      dispatch(fetchNearOffer(id));
+    if (id) {
+      dispatch(fetchOffer({ id }));
+      dispatch(fetchNearOffer({ id }));
+      dispatch(addSelectedOffer(id));
     }
 
     return () => {
-      dispatch(isNotOffer());
+      dispatch(dropOffer());
+      dispatch(dropNearOffers());
+      dispatch(clearFormReview());
     };
-  },[dispatch, id]);
+  }, [dispatch, id]);
 
   if (isOffersLoading) {
     return <LoadingScreen/>;
   } else if (!offer) {
     return <NotFound/>;
+  }
+
+  if(!id){
+    return <div></div>;
   }
 
   const {
@@ -53,6 +66,14 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
     price, goods, description,
     host: { avatarUrl, isPro, name }
   } = offer;
+
+  const handleChangeStatus = () => {
+    if (!isFavorite) {
+      dispatch(addFavorite({ id }));
+    } else {
+      dispatch(deleteFavorite({ id }));
+    }
+  };
 
   return (
     <div className="page">
@@ -85,7 +106,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
                 <h1 className="offer__name">
                   {title}
                 </h1>
-                <ButtonBookmark offer={offer} buttonView={'offers'}/>
+                <ButtonBookmark buttonView={'offers'} isFavorite={isFavorite} handleChangeStatus={handleChangeStatus}/>
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
@@ -149,7 +170,7 @@ function OffersPage({authorizationStatus}: TOfferProps): React.JSX.Element {
               </section>
             </div>
           </div>
-          <Map offers={[...nearOffers.slice(0, 3), offer]} selectedOffers={offer} page={'offers'} currentCity={currentCity}/>
+          <Map offers={[...nearOffers.slice(0, 3), offer]} page={'offers'} currentCity={currentCity}/>
         </section>
         <div className="container">
           <NearList nearOffers={nearOffers}/>
