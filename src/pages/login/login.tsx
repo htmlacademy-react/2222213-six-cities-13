@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from '../../components/hooks';
 import { loginAction } from '../../store/api-actions/authorization-api';
 import { AppRoute, AuthorizationStatus, City} from '../../const';
 import loginStyles from './login-page.module.css';
-import { setCurrentCity } from '../../store/action';
+import { setCurrentCity } from '../../store/slices/current-city-slices';
+
 
 function LoginPage(): React.JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
   const regexPassword = /^(?=.*\d)(?=.*[a-z])\S*$/i;
   const regexLogin = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;

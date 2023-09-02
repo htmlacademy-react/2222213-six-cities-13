@@ -10,12 +10,12 @@ type ReviewListProps = {
 function ReviewList({id}: ReviewListProps): React.JSX.Element {
 
   const dispatch = useAppDispatch();
-  const reviews = useAppSelector((state) => state.reviews);
+  const reviews = useAppSelector((state) => state.reviews.reviews);
   const sortReview = [...reviews].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   useEffect(() => {
     if(id) {
-      dispatch(fetchReviews(id));
+      dispatch(fetchReviews({id}));
     }
   }, [dispatch, id]);
 

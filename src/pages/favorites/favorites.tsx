@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import FavoriteList from '../../components/favorites-list/favorites-list';
 import Header from '../../components/headers/headers';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
-import { fetchFavorites } from '../../store/api-actions/favorites-api';
+import { fetchFavoritesOffers } from '../../store/api-actions/favorites-api';
 import cn from 'classnames';
 
 
 function FavoritePage(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const favorites = useAppSelector((state) => state.favorites);
+  const favorites = useAppSelector((state) => state.favoritesOffers.favoritesOffers);
   const favoritesOffersIsEmpty = favorites.length === 0;
 
   useEffect(() => {
-    dispatch(fetchFavorites());
+    dispatch(fetchFavoritesOffers());
   }, [dispatch]);
 
   return (

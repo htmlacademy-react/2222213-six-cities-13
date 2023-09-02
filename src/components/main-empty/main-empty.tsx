@@ -5,7 +5,7 @@ import CityList from '../../components/citi-list/citi-list';
 import { useAppSelector } from '../hooks';
 
 function MainPagesEmpty(): React.JSX.Element {
-  const currentCity = useAppSelector((state) => state.currentCity);
+  const currentCity = useAppSelector((state) => state.currentCity.currentCity);
 
   return (
     <div className="page page--gray page--main">

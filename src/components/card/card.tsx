@@ -1,21 +1,58 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {TOffer} from '../../types/offer-type';
 import {Link} from 'react-router-dom';
-import {AppRoute, capitalize, transformRatingToPercent} from '../../const';
+import {AppRoute, OfferType, capitalize, transformRatingToPercent} from '../../const';
 import cn from 'classnames';
 import ButtonBookmark from '../bookmark-button/bookmark-button';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { addSelectedOffer } from '../../store/slices/offer-slices';
+import { addFavorite, deleteFavorite } from '../../store/api-actions/favorites-api';
 
 
 type TOffersCardProps = {
   offer: TOffer;
   view: 'offerList' | 'favoriteList' | 'near';
-  onListItemHover?: (id: string) => void;
 };
 
-function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Element {
+function Card({offer, view}: TOffersCardProps): React.JSX.Element {
+  const dispatch = useAppDispatch();
   const {
     id, title, type, price, previewImage, isPremium, rating
   } = offer;
+
+  const favoritesOffers = useAppSelector((state) => state.favoritesOffers.favoritesOffers);
+  const isFavorite = !!favoritesOffers.find((item) => item.id === id);
+
+  const [isFavoriteOffer, setIsFavoriteOffer] = useState(isFavorite);
+
+  useEffect(() => {
+    if(isFavorite) {
+      setIsFavoriteOffer(true);
+    } else {
+      setIsFavoriteOffer(false);
+    }
+  }, [isFavorite]);
+
+  const handleChangeStatus = () => {
+    if (!isFavoriteOffer) {
+      dispatch(addFavorite({ id }));
+    } else {
+      dispatch(deleteFavorite({ id }));
+    }
+    setIsFavoriteOffer(isFavorite);
+  };
+
+  const handleCardMouseOver = () => {
+    if (view === 'offerList') {
+      dispatch(addSelectedOffer(id));
+    }
+  };
+
+  const handleCardMouseLeave = () => {
+    if (view === 'offerList') {
+      dispatch(addSelectedOffer(null));
+    }
+  };
 
   return (
     <article className={cn(
@@ -23,7 +60,8 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
       {'cities__card': view === 'offerList'},
       {'favorites__card': view === 'favoriteList'},
       {'near-places__card': view === 'near'})}
-    onMouseOver={() => onListItemHover ? onListItemHover(id) : null}
+    onMouseOver={handleCardMouseOver}
+    onMouseLeave={handleCardMouseLeave}
     >
       {isPremium &&
       <div className="place-card__mark">
@@ -55,7 +93,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <ButtonBookmark offer={offer} buttonView={'card'}/>
+          <ButtonBookmark isFavorite={isFavorite} buttonView={'card'} handleChangeStatus={handleChangeStatus}/>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
@@ -68,7 +106,7 @@ function Card({offer, view, onListItemHover}: TOffersCardProps): React.JSX.Eleme
             {title}
           </Link>
         </h2>
-        <p className="place-card__type">{capitalize(type)}</p>
+        <p className="place-card__type">{type === OfferType.Room ? 'Private Room' : capitalize(type)}</p>
       </div>
     </article>
   );

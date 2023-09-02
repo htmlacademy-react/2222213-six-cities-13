@@ -7,9 +7,9 @@ import { logoutAction } from '../../store/api-actions/authorization-api';
 
 function Header(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
-  const favorites = useAppSelector((state) => state.favorites);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const user = useAppSelector((state) => state.user.user);
+  const favorites = useAppSelector((state) => state.favoritesOffers.favoritesOffers);
 
   return(
     <header className="header">
